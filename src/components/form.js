@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Clarifai from 'clarifai';
+import keys from '../../config/prod';
 
 const app = new Clarifai.App({
   apiKey: 'a437e508660547c8bf1d98bebf04c582'
@@ -12,28 +13,26 @@ class Form extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    app.models
-      .predict('bd367be194cf45149e75f01d59f77ba7', this.state.imgUrl)
-      .then(
-        response => {
-          let tags = response.outputs[0].data.concepts;
-          let result = tags.filter(tag => tag.value > 0.8);
-          result = result.map(tag => {
-            return { id: tag.id, name: '#' + tag.name };
-          });
-          let tagCopy = result
-            .map(tag => {
-              return tag.name;
-            })
-            .join(' ');
-          console.log(tagCopy);
-          this.props.onSubmit(result, this.state.imgUrl, tagCopy);
-        },
-        err => {
-          // there was an error
-          console.log(err);
-        }
-      );
+    app.models.predict(keys.clarifaiKey, this.state.imgUrl).then(
+      response => {
+        let tags = response.outputs[0].data.concepts;
+        let result = tags.filter(tag => tag.value > 0.8);
+        result = result.map(tag => {
+          return { id: tag.id, name: '#' + tag.name };
+        });
+        let tagCopy = result
+          .map(tag => {
+            return tag.name;
+          })
+          .join(' ');
+        console.log(tagCopy);
+        this.props.onSubmit(result, this.state.imgUrl, tagCopy);
+      },
+      err => {
+        // there was an error
+        console.log(err);
+      }
+    );
   };
 
   render() {

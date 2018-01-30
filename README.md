@@ -10,7 +10,7 @@
 
 ## Demo
 
-Here is a working live demo :
+Here is a working live demo : https://ai-hastags.herokuapp.com/
 
 ## Site
 
